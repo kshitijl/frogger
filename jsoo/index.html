@@ -6,9 +6,32 @@
         <title>Frogger</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script type="text/javascript" src="_build/default/main.bc.js"></script>
+        <style>
+         .my_text
+         {
+             font-family:    Arial, Helvetica, sans-serif;
+             font-size:      80px;
+             font-weight:    bold;
+         }
+         table, th, td {
+             border: 1px solid black;
+             table-layout:fixed;
+             width:256px;
+         }
+        </style>
     </head>
     <body>
-        put a table here ; bg here ; each cell has an id
-        <div id="foo"></div>
+        <div id="foo" class="my_text"></div>
+        <table>
+            <tr>
+                <td>
+                    <img src="" id="0.0"></img>
+                </td>
+                <td>
+                    <img src="" id="0.1"></img>
+                </td>
+            </tr>
+        </table>
+        <div id="frog"></div>
     </body>
     </html>

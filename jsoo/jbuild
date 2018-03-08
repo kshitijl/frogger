@@ -7,4 +7,5 @@
   (preprocess (pps (js_of_ocaml-ppx)))
   (js_of_ocaml ((flags (+weak.js))))
   (libraries
-   (js_of_ocaml))))
+   (base
+    js_of_ocaml))))
