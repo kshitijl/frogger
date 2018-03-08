@@ -1,0 +1,10 @@
+;; -*- scheme -*-
+
+(jbuild_version 1)
+
+(executables
+ ((names (main))
+  (preprocess (pps (js_of_ocaml-ppx)))
+  (js_of_ocaml ((flags (+weak.js))))
+  (libraries
+   (js_of_ocaml))))
