@@ -4,7 +4,9 @@ open Js_of_ocaml
    `##.prop_name := ` to set a property
    ##.prop_name to read (no deref)
 
-   keypress events should trigger a redraw.
+   -keypress events should trigger a redraw.
+   z-index if there's trouble with over/under bg
+
 *)
 
 let get_by_id id =
