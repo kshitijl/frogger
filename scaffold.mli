@@ -95,9 +95,3 @@ module Rng : sig
       state of [t] so that subsequent calls return different random numbers. *)
   val random_int : t -> lower:int -> upper:int -> int 
 end
-
-val main
-  : init:'a
-  -> handle_event:('a -> Event.t -> 'a)
-  -> draw:('a -> Display_list.t)
-  -> unit
