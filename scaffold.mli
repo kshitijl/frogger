@@ -1,10 +1,3 @@
-module Context : sig
-  type t
-
-  (** Set up the DOM and event loop. *)
-  val initialize : unit -> t Deferred.t
-end
-
 (** The grid system:
 
     0. The positions of all objects are snapped onto a coarse grid.
@@ -104,8 +97,7 @@ module Rng : sig
 end
 
 val main
-  : Context.t
-  -> init:'a
+  : init:'a
   -> handle_event:('a -> Event.t -> 'a)
   -> draw:('a -> Display_list.t)
-  -> unit Deferred.t
+  -> unit

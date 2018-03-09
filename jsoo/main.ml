@@ -1,12 +1,13 @@
 open Base
 open Js_of_ocaml
+
 (* ## - method will get called as soon I deref.
    `##.prop_name := ` to set a property
    ##.prop_name to read (no deref)
 
-   -keypress events should trigger a redraw.
-   z-index if there's trouble with over/under bg
-
+   - keypress events should trigger a redraw.
+   - z-index if there's trouble with over/under bg
+   - any time there's an updated world -> redraw
 *)
 
 let get_by_id id =
@@ -59,8 +60,8 @@ let () =
       Js._true));
   let _ =
     Dom_html.window##setInterval (Js.wrap_callback (fun () ->
-        render !frog_row !frog_col;
         frog_col := (!frog_col + 1) % 2;
+        render !frog_row !frog_col;
       ))
       1000.0
   in
