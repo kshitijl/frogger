@@ -29,17 +29,21 @@ module Position : sig
   type t =
     { x : int
     ; y : int
-    }
+    } [@@deriving fields]
+
+  val create : x:int -> y:int -> t
 end
 
 (** Note that all these images have unit height. *)
 module Image : sig
-  type t
+  type t = string
 
   val frog_up     : t
   val frog_down   : t
   val frog_left   : t
   val frog_right  : t
+
+  val frog_on_log : t
 
   val car1_left   : t
   val car1_right  : t
@@ -68,30 +72,14 @@ end
 
 module Key : sig
   type t =
-    | UpArrow
-    | DownArrow
-    | LeftArrow
-    | RightArrow
+    | Arrow_up
+    | Arrow_down
+    | Arrow_left
+    | Arrow_right
 end
-
-module Time : sig type t = int end (* CR klauria: Use appropriate [Time.t] *)
 
 module Event : sig
   type t =
     | Tick     
     | Keypress of Key.t
-end
-
-module Rng : sig
-  type t
-
-  (** An [Rng.t] created with the same seed is guaranteed to return the same
-      sequence of random numbers when [random_int] is called on it with the same
-      bounds. *)
-  val create     : seed:int -> t
-
-  (** [random_int t ~lower ~upper] returns an integer sampled uniformly between
-      [lower] and [upper], inclusive of both endpoints. It mutates the internal
-      state of [t] so that subsequent calls return different random numbers. *)
-  val random_int : t -> lower:int -> upper:int -> int 
 end

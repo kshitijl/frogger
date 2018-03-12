@@ -2,10 +2,16 @@
 
 (jbuild_version 1)
 
-(executables
- ((names (main))
+(executable
+ ((name main)
   (preprocess (pps (js_of_ocaml-ppx ppx_fields_conv)))
   (js_of_ocaml ((flags (+weak.js))))
   (libraries
    (base
-    js_of_ocaml))))
+    js_of_ocaml
+    stdio
+    ))))
+
+(alias
+ ((name DEFAULT)
+  (deps (main.bc.js index.html (glob_files assets/*.png)))))

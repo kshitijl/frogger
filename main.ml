@@ -1,49 +1,10 @@
 open Base
+
 open Js_of_ocaml
-
-(* ## - method will get called as soon I deref.
-   `##.prop_name := ` to set a property
-   ##.prop_name to read (no deref)
-
-   - z-index if there's trouble with over/under bg
-   - any time there's an updated world -> redraw
-*)
-
 module Html  = Dom_html
+open Scaffold
+
 let document = Html.window##.document
-
-module Position = struct
-  type t =
-    { x : int
-    ; y : int
-    } [@@deriving fields]
-end
-
-module Image = struct
-  type t = string
-end
-
-module Display_list = struct
-  module Display_command = struct
-    type nonrec t = Image.t * Position.t
-  end
-
-  type t = Display_command.t list
-end
-
-module Key = struct
-  type t =
-    | Arrow_up
-    | Arrow_down
-    | Arrow_left
-    | Arrow_right
-end
-
-module Event = struct
-  type t =
-    | Tick
-    | Keypress of Key.t
-end
 
 module Game = struct
   module Config = struct
@@ -54,8 +15,8 @@ module Game = struct
     }
 
     let default =
-      { num_rows = 13
-      ; num_cols = 15
+      { num_rows = List.length Board.rows
+      ; num_cols = Board.num_cols
       ; grid_size_in_px = 50
       }
   end
@@ -100,13 +61,13 @@ background-repeat : no-repeat;
     let () =
       for i = 0 to num_rows - 1 do
         for j = 0 to num_cols - 1 do
-          board_dom.(i).(j)##.src := Js.string "assets/transparent.png"
+          board_dom.(num_rows - i - 1).(j)##.src := Js.string "assets/selector-square-border.png" 
         done
       done
     in
     List.iter display_list
       ~f:(fun (image, (position : Position.t)) ->
-          board_dom.(position.y).(position.x)##.src := Js.string image
+          board_dom.(num_rows - position.y - 1).(position.x)##.src := Js.string image
         )
   ;;
 
@@ -115,21 +76,7 @@ background-repeat : no-repeat;
       { init : 'a
       ; handle_event : 'a -> Event.t -> 'a
       ; draw         : 'a -> Display_list.t
-      }
-
-    let default =
-      { init = Position.Fields.create ~x:0 ~y:0
-      ; handle_event =
-          (fun world event ->
-             match event with
-             | Tick -> world
-             | Keypress Arrow_down -> Position.Fields.create ~x:world.x ~y:(world.y+1)
-             | _ -> world
-          )
-      ; draw         =
-          (fun world ->
-             [ "assets/frog-icon.png", world ])
-      }
+      }    
   end
 
   let init_event_handlers (config : Config.t) board_dom (game_impl : 'a Game_impl.t) =
@@ -168,13 +115,29 @@ background-repeat : no-repeat;
   ;;
 end
 
-let onload _ =
+let onload ~init ~handle_event ~draw _ =
   let board_div =
     Js.Opt.get (document##getElementById (Js.string "board"))
       (fun () -> assert false)
   in
-  Game.run board_div Game.Config.default Game.Game_impl.default;
+  Game.run board_div Game.Config.default
+    { Game.Game_impl.
+      init 
+    ; handle_event
+    ; draw
+    };
   Js._false
 ;;
 
-let _ = Html.window##.onload := Html.handler onload
+let main ~init ~handle_event ~draw =
+  Html.window##.onload := Html.handler (
+      onload ~init ~handle_event ~draw)
+;;
+
+
+let () =
+  main
+    ~init:(Frogger.create ())
+    ~handle_event:Frogger.handle_event
+    ~draw:Frogger.draw
+
